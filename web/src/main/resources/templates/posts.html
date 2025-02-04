@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Posts</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Posts</h1>
+</header>
+
+<div class="container">
+  <h2>Create Post</h2>
+  <textarea id="content" placeholder="What's on your mind?"></textarea>
+  <button onclick="addPost()">Post</button>
+</div>
+
+<div class="container">
+  <h2>All Posts</h2>
+  <div id="posts"></div>
+</div>
+
+<script>
+  async function addPost() {
+      const userId = 1; // Replace with the logged-in user's ID
+      const content = document.getElementById('content').value;
+
+      const response = await fetch('/api/posts/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, content })
+      });
+
+      if (response.ok) {
+          alert("Post added successfully!");
+          fetchPosts(); // Refresh posts
+      } else {
+          alert("Failed to add post.");
+      }
+  }
+
+  async function fetchPosts() {
+      const response = await fetch('/api/posts/all');
+      const posts = await response.json();
+
+      const postsContainer = document.getElementById('posts');
+      postsContainer.innerHTML = '';
+      posts.forEach(post => {
+          const postDiv = document.createElement('div');
+          postDiv.className = 'post';
+          postDiv.innerHTML = `<p>${post.content}</p><small>${post.timestamp}</small>`;
+          postsContainer.appendChild(postDiv);
+      });
+  }
+
+  fetchPosts(); // Load posts on page load
+</script>
+</body>
+</html>
