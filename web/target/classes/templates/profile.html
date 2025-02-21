@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <h1>User Profile</h1>
+</header>
+
+<div class="container">
+    <h2>Update Profile</h2>
+    <input type="text" id="bio" placeholder="Bio">
+    <input type="text" id="profilePictureUrl" placeholder="Profile Picture URL">
+    <button onclick="updateProfile()">Update</button>
+</div>
+
+<script>
+    async function updateProfile() {
+        const userId = 1; // Replace with the logged-in user's ID
+        const bio = document.getElementById('bio').value;
+        const profilePictureUrl = document.getElementById('profilePictureUrl').value;
+
+        const response = await fetch('/api/profiles/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, bio, profilePictureUrl })
+        });
+
+        if (response.ok) {
+            alert("Profile updated successfully!");
+        } else {
+            alert("Failed to update profile.");
+        }
+    }
+</script>
+</body>
+</html>
